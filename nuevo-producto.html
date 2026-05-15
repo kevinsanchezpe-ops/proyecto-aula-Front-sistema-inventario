@@ -1,0 +1,176 @@
+<!doctype html>
+<!-- Página para registrar un nuevo producto en el inventario -->
+<html lang="es">
+  <head>
+    <!-- Metadatos, fuente, estilos y scripts para el formulario de producto -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Nuevo producto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/productos.js"></script>
+  </head>
+  <body class="editor-page" onload="protectPage()">
+    <!-- Página de creación de producto: formulario para enviar datos de producto al backend -->
+    <!-- Barra superior con navegación del sistema -->
+    <header class="topbar">
+      <a class="wordmark" href="panel.html"><span>HIGH</span>SPORT</a>
+      <nav class="topnav">
+        <a href="panel.html">Dashboard</a>
+        <a class="active" href="dashboard.html">Inventario</a>
+        <a href="registro-usuario.html">Usuarios</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div class="avatar" title="Kevin Sanchez">KS</div>
+        <button
+          onclick="handleLogout()"
+          style="
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+          "
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </header>
+
+    <main class="editor-shell">
+      <!-- Ruta visual para volver al inventario -->
+      <div class="breadcrumb">
+        <a href="dashboard.html">Inventario</a>
+        <span>/</span>
+        <strong>Nuevo producto</strong>
+      </div>
+
+      <!-- Layout dividido: formulario a la izquierda e imagen decorativa a la derecha -->
+      <section class="editor-layout">
+        <!-- Formulario principal para crear el producto -->
+        <article class="product-form-card">
+          <form class="form-stack" id="producto-form">
+            <label for="producto">NOMBRE DEL PRODUCTO</label>
+            <input
+              id="producto"
+              type="text"
+              placeholder="Ej: Nike Air Max 270"
+              required
+            />
+
+            <!-- Campos numéricos para precio y existencias -->
+            <div class="split-fields">
+              <div>
+                <label for="precio">PRECIO ($)</label>
+                <input
+                  id="precio"
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  required
+                />
+              </div>
+              <div>
+                <label for="cantidad">CANTIDAD</label>
+                <input id="cantidad" type="number" placeholder="0" required />
+              </div>
+            </div>
+
+            <!-- Selector de categoría del producto -->
+            <label for="categoria">CATEGORÍA</label>
+            <select id="categoria" required>
+              <option value="">Seleccionar categoría</option>
+              <option>Calzado</option>
+              <option>Equipos</option>
+              <option>Ropa</option>
+              <option>Accesorios</option>
+            </select>
+
+            <!-- Campos complementarios de talla y color -->
+            <div class="split-fields">
+              <div>
+                <label for="talla">TALLA</label>
+                <select id="talla" required>
+                  <option value="">Seleccionar talla</option>
+                  <option>XS</option>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                  <option>XXL</option>
+                  <option>Única</option>
+                </select>
+              </div>
+              <div>
+                <label for="color">COLOR</label>
+                <input
+                  id="color"
+                  type="text"
+                  placeholder="Ej: Negro, Blanco, Rojo"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Botones para cancelar o guardar el producto -->
+            <div class="form-actions">
+              <a class="btn btn-secondary" href="dashboard.html">Cancelar</a>
+              <button type="submit" class="btn btn-primary">
+                Guardar Producto
+              </button>
+            </div>
+          </form>
+        </article>
+
+        <!-- Bloque decorativo con marca e imagen deportiva -->
+        <aside class="product-showcase">
+          <div class="showcase-words">
+            <span class="red">HIGH</span>
+            <span class="white">SPORT</span>
+          </div>
+          <img
+            class="shoe shoe--runner"
+            src="img/botaroja.png"
+            alt="Bota roja de fútbol"
+          />
+        </aside>
+      </section>
+    </main>
+
+    <!-- Pie de página sobre fondo transparente del editor -->
+    <footer class="site-footer site-footer--transparent">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Política de privacidad</a> |
+      <a href="#">Términos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+  </body>
+
+  <script>
+    // Controla el envío del formulario de producto nuevo.
+    document.getElementById("producto-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // Toma los valores del formulario para construir el producto.
+      const nombre = document.getElementById("producto").value;
+      const precio = document.getElementById("precio").value;
+      const cantidad = document.getElementById("cantidad").value;
+      const categoria = document.getElementById("categoria").value;
+      const talla = document.getElementById("talla").value;
+      const color = document.getElementById("color").value;
+
+      // Llama a la función que normaliza los datos y los envía a la API.
+      handleCreateProducto(nombre, precio, cantidad, categoria, talla, color);
+    });
+  </script>
+</html>

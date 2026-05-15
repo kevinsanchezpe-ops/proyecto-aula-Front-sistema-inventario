@@ -1,0 +1,201 @@
+<!doctype html>
+<!-- Página para editar un producto existente: carga datos desde el ID en la URL -->
+<html lang="es">
+  <head>
+    <!-- Metadatos, estilos y scripts necesarios para editar productos -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Editar producto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/productos.js"></script>
+  </head>
+  <body
+    class="editor-page"
+    onload="
+      protectPage();
+      loadProductoForm();
+    "
+  >
+    <!-- Página de edición de producto: carga el producto seleccionado y permite guardar cambios -->
+    <!-- Barra superior de navegación del sistema -->
+    <header class="topbar">
+      <a class="wordmark" href="panel.html"><span>HIGH</span>SPORT</a>
+      <nav class="topnav">
+        <a href="panel.html">Dashboard</a>
+        <a class="active" href="dashboard.html">Inventario</a>
+        <a href="registro-usuario.html">Usuarios</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div class="avatar" title="Kevin Sanchez">KS</div>
+        <button
+          onclick="handleLogout()"
+          style="
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+          "
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </header>
+
+    <main class="editor-shell">
+      <!-- Encabezado con ruta de navegación e identificador visual del producto -->
+      <div class="editor-header-row">
+        <div class="breadcrumb">
+          <a href="dashboard.html">Inventario</a>
+          <span>/</span>
+          <strong>Editar producto</strong>
+        </div>
+        <div class="product-id">ID: #0042</div>
+      </div>
+
+      <!-- Layout de edición con formulario y composición visual lateral -->
+      <section class="editor-layout">
+        <!-- Formulario que se llena desde loadProductoForm() -->
+        <article class="product-form-card">
+          <div class="editing-banner" id="editing-banner">Cargando...</div>
+          <form class="form-stack" id="producto-edit-form">
+            <!-- Campo oculto usado para enviar el id al actualizar o eliminar -->
+            <input id="producto-id" type="hidden" />
+
+            <label for="producto">NOMBRE DEL PRODUCTO</label>
+            <input id="producto" type="text" required />
+
+            <!-- Campos editables de precio y cantidad -->
+            <div class="split-fields">
+              <div>
+                <label for="precio">PRECIO ($)</label>
+                <input id="precio" type="number" step="0.01" required />
+              </div>
+              <div>
+                <label for="cantidad">CANTIDAD</label>
+                <input id="cantidad" type="number" required />
+              </div>
+            </div>
+
+            <!-- Selector para actualizar la categoría -->
+            <label for="categoria">CATEGORÍA</label>
+            <select id="categoria" required>
+              <option value="">Seleccionar categoría</option>
+              <option>Calzado</option>
+              <option>Equipos</option>
+              <option>Ropa</option>
+              <option>Accesorios</option>
+            </select>
+
+            <!-- Datos complementarios del producto -->
+            <div class="split-fields">
+              <div>
+                <label for="talla">TALLA</label>
+                <select id="talla" required>
+                  <option value="">Seleccionar talla</option>
+                  <option>XS</option>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                  <option>XXL</option>
+                  <option>Única</option>
+                </select>
+              </div>
+              <div>
+                <label for="color">COLOR</label>
+                <input
+                  id="color"
+                  type="text"
+                  placeholder="Ej: Negro, Blanco, Rojo"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Acciones de eliminar, cancelar o guardar cambios -->
+            <div class="form-actions form-actions--three">
+              <button
+                class="btn btn-danger"
+                type="button"
+                onclick="
+                  const id = document.getElementById('producto-id').value;
+                  handleDeleteProducto(id);
+                "
+              >
+                Eliminar
+              </button>
+              <a class="btn btn-secondary" href="dashboard.html">Cancelar</a>
+              <button type="submit" class="btn btn-primary">
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        </article>
+
+        <!-- Elemento decorativo lateral de la pantalla de edición -->
+        <aside class="product-showcase product-showcase--stacked">
+          <div class="showcase-repeat">
+            <span>HIGHSPORT</span>
+            <span>HIGHSPORT</span>
+            <span>HIGHSPORT</span>
+            <span>HIGHSPORT</span>
+          </div>
+          <img
+            class="shoe shoe--boot"
+            src="img/guayo-rojo.png"
+            alt="Guayo deportivo rojo"
+          />
+        </aside>
+      </section>
+    </main>
+
+    <!-- Pie de página de pantalla de editor -->
+    <footer class="site-footer site-footer--transparent">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Política de privacidad</a> |
+      <a href="#">Términos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+
+    <script>
+      // Intercepta el envío para actualizar el producto mediante JavaScript.
+      document
+        .getElementById("producto-edit-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          // Recupera el id y todos los campos editables del formulario.
+          const id = document.getElementById("producto-id").value;
+          const nombre = document.getElementById("producto").value;
+          const precio = document.getElementById("precio").value;
+          const cantidad = document.getElementById("cantidad").value;
+          const categoria = document.getElementById("categoria").value;
+          const talla = document.getElementById("talla").value;
+          const color = document.getElementById("color").value;
+
+          // Envía los datos al flujo de actualización definido en productos.js.
+          handleUpdateProducto(
+            id,
+            nombre,
+            precio,
+            cantidad,
+            categoria,
+            talla,
+            color,
+          );
+        });
+    </script>
+  </body>
+</html>

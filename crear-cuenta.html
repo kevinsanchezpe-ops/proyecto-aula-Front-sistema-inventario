@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- Página de creación de cuenta: formulario para registrar un nuevo usuario en el sistema -->
+<html lang="es">
+  <head>
+    <!-- Configuración del documento y compatibilidad con pantallas pequeñas -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Crear cuenta</title>
+
+    <!-- Fuente principal importada desde Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Hoja de estilos y lógica compartida para registrar el usuario -->
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+  </head>
+  <body class="auth-page auth-page--register">
+    <main class="auth-shell auth-shell--register">
+      <!-- Tarjeta ancha usada para capturar los datos de la cuenta nueva -->
+      <section class="auth-card auth-card--wide">
+        <div class="brand-chip">HIGHSPORT</div>
+        <h1>Crear cuenta</h1>
+        <form class="form-grid" id="register-form">
+          <!-- Campo de nombre del usuario -->
+          <div>
+            <label for="nombre">NOMBRE COMPLETO</label>
+            <input id="nombre" type="text" placeholder="Tu nombre" required />
+          </div>
+
+          <!-- Campo de correo, ocupa las dos columnas del formulario -->
+          <div class="span-2">
+            <label for="email">CORREO ELECTRÓNICO</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
+
+          <!-- Campo de contraseña principal -->
+          <div>
+            <label for="password">CONTRASEÑA</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="••••••••••••"
+              required
+            />
+          </div>
+
+          <!-- Campo para confirmar que la contraseña fue escrita correctamente -->
+          <div>
+            <label for="password-confirm">CONFIRMAR</label>
+            <input
+              id="password-confirm"
+              type="password"
+              placeholder="••••••••••••"
+              required
+            />
+          </div>
+
+          <!-- Acciones para cancelar o enviar el registro -->
+          <div class="form-actions span-2">
+            <a class="btn btn-secondary" href="index.html">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Crear cuenta</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- Pie de página público -->
+    <footer class="site-footer site-footer--transparent">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Política de privacidad</a> |
+      <a href="#">Términos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+
+    <!-- Al enviar el formulario se valida y se llama a handleRegister para crear usuario -->
+
+    <script>
+      // Captura el formulario para validar y enviar los datos sin recargar.
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          // Lee todos los campos necesarios para crear la cuenta.
+          const nombre = document.getElementById("nombre").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("password-confirm").value;
+
+          // Delega la validación final y la llamada al backend a auth.js.
+          handleRegister(nombre, email, password, confirmPassword);
+        });
+    </script>
+  </body>
+</html>

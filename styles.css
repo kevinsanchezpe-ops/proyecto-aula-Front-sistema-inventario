@@ -1,0 +1,1247 @@
+/*
+  styles.css
+  ---------------------------
+  Estilos globales del proyecto HighSport:
+  - variables de color y tipografía
+  - diseño de páginas de autenticación
+  - panel de control e inventario
+  - formularios y tablas
+  - estilos responsive para móviles
+*/
+:root {
+  /* Paleta centralizada: permite reutilizar colores sin repetir valores. */
+  --bg: #050505;
+  --panel: #181818;
+  --panel-2: #111111;
+  --surface: #f4f4f4;
+  --border: rgba(255, 255, 255, 0.14);
+  --muted: #7f7f7f;
+  --text: #f5f5f5;
+  --text-dark: #171717;
+  --red: #ff1b12;
+  --red-deep: #a30d09;
+  --green: #11822e;
+  --yellow: #988405;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Reset básico y diseño global */
+* {
+  /* Incluye padding y borde dentro del ancho/alto calculado de cada elemento. */
+  box-sizing: border-box;
+}
+
+html,
+body {
+  /* Define la base visual oscura y la tipografía común de todas las pantallas. */
+  margin: 0;
+  min-height: 100%;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  /* Los enlaces heredan color para integrarse con cada componente. */
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  /* Los controles de formulario usan la misma fuente que el resto de la página. */
+  font: inherit;
+}
+
+.auth-page,
+.editor-page {
+  /* Garantiza páginas de alto completo y evita desplazamiento horizontal accidental. */
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Fondo visual de las paginas de autenticacion */
+.auth-page::before,
+.auth-page::after {
+  /* Capas fijas que crean fondo con imagen y velo de color. */
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.auth-page::before {
+  /* Imagen principal de fondo para login y registro. */
+  background: url("img/fondo.png") center center / cover no-repeat;
+  opacity: 1;
+}
+
+.auth-page::after {
+  /* Degradado sobre la imagen para mejorar contraste del contenido. */
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(120, 0, 0, 0.18) 40%,
+    rgba(120, 0, 0, 0.18) 100%
+  );
+  opacity: 1;
+}
+
+/* Contenedores y marca usados en login y registro */
+.auth-shell {
+  /* Centra el contenido de autenticación y limita su ancho máximo. */
+  width: min(1280px, calc(100% - 48px));
+  margin: 0 auto;
+  min-height: calc(100vh - 60px);
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 1;
+  padding: 32px 0 96px;
+}
+
+.auth-shell--register {
+  /* Ajuste vertical específico para la pantalla de registro. */
+  padding-top: 48px;
+}
+
+.brand-lockup {
+  /* Agrupa logo y subtítulo con separación vertical. */
+  display: grid;
+  gap: 22px;
+  justify-items: center;
+  margin-bottom: 28px;
+}
+
+.brand-lockup--login {
+  margin-top: -20px;
+}
+
+.brand-logo {
+  /* Logotipo textual grande usado en la pantalla de login. */
+  min-width: 380px;
+  padding: 20px 42px;
+  text-align: center;
+  background: #040404;
+  color: #fff;
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  position: relative;
+}
+
+.brand-logo span,
+.wordmark span {
+  /* Resalta la palabra HIGH en rojo dentro de la marca. */
+  color: var(--red);
+}
+
+.brand-logo--shadow::after {
+  /* Sombra roja desplazada que da efecto de bloque al logo. */
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: -14px;
+  bottom: -12px;
+  height: 100%;
+  background: var(--red);
+  z-index: -1;
+}
+
+.brand-subtitle {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+/* Tarjetas de formularios de autenticacion */
+.auth-card {
+  /* Contenedor claro que contrasta con el fondo oscuro de autenticación. */
+  width: min(100%, 348px);
+  background: rgba(248, 248, 248, 0.98);
+  color: var(--text-dark);
+  padding: 34px 18px 18px;
+  box-shadow: var(--shadow);
+}
+
+.auth-card--wide {
+  /* Variante más ancha para formularios con más campos. */
+  width: min(100%, 448px);
+  padding: 36px 30px 26px;
+  position: relative;
+}
+
+.brand-chip {
+  /* Etiqueta de marca posicionada sobre la tarjeta de registro. */
+  position: absolute;
+  top: -50px;
+  left: 0;
+  background: var(--red);
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.auth-card h1 {
+  margin: 0 0 24px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1d1d1d;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* Formularios, campos y botones reutilizables */
+.form-stack,
+.form-grid {
+  /* Sistema base de separación entre campos de formulario. */
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid {
+  /* Divide formularios amplios en dos columnas. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.span-2 {
+  /* Hace que un campo ocupe todo el ancho de la grilla. */
+  grid-column: 1 / -1;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+input,
+select {
+  /* Estilo común para inputs y selects del proyecto. */
+  width: 100%;
+  border: 2px solid #4a4a4a;
+  background: #fff;
+  color: #252525;
+  min-height: 48px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+.btn {
+  /* Botón base reutilizable con efecto de sombra tipo bloque. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px 22px;
+  border: 2px solid #111;
+  box-shadow: 4px 4px 0 #111;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  /* En hover se simula presión moviendo el botón y reduciendo la sombra. */
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #111;
+}
+
+.btn-full {
+  /* Variante que ocupa todo el ancho del contenedor. */
+  width: 100%;
+}
+
+.btn-primary {
+  /* Acción principal destacada en rojo. */
+  background: var(--red);
+  color: #fff;
+}
+
+.btn-secondary {
+  /* Acción secundaria clara, usada para cancelar o volver. */
+  background: #fff;
+  color: #1e1e1e;
+}
+
+.btn-danger {
+  /* Acción destructiva, comparte rojo para advertir riesgo. */
+  background: var(--red);
+  color: #fff;
+}
+
+.btn-outline-red {
+  /* Botón de borde rojo para acciones alternativas en fondos oscuros. */
+  border: 2px solid var(--red);
+  box-shadow: none;
+  color: #fff;
+  background: transparent;
+}
+
+.auth-link {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 0.74rem;
+}
+
+.auth-link a {
+  text-decoration: underline;
+}
+
+/* Pie de pagina comun para pantallas publicas y privadas */
+.site-footer {
+  /* Pie de página común con texto centrado y tamaño reducido. */
+  width: 100%;
+  text-align: center;
+  font-size: 0.72rem;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.site-footer a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.site-footer--transparent {
+  /* Pie flotante para pantallas con fondo visual completo. */
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  background: transparent;
+}
+
+.site-footer--solid {
+  /* Pie con fondo sólido para páginas internas. */
+  background: #8a0b08;
+}
+
+/* Barra superior y navegacion principal del sistema */
+.topbar {
+  /* Barra de navegación centrada y limitada al ancho del contenido. */
+  width: min(1280px, calc(100% - 48px));
+  margin: 26px auto 0;
+  min-height: 68px;
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.wordmark {
+  /* Marca compacta usada dentro de la barra superior. */
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.topnav {
+  /* Agrupa enlaces principales del sistema. */
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  font-weight: 700;
+}
+
+.topnav a {
+  color: #888;
+  padding-bottom: 6px;
+  white-space: nowrap;
+}
+
+.topnav a.active {
+  /* Indica visualmente la sección actual. */
+  color: var(--red);
+  border-bottom: 3px solid var(--red);
+}
+
+.avatar {
+  /* Círculo con iniciales del usuario autenticado. */
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red);
+  color: #000;
+  font-weight: 800;
+}
+
+/* Layout base de panel e inventario */
+.panel-page {
+  /* Fondo por franjas para separar encabezado y contenido del panel. */
+  background: linear-gradient(180deg, #191919 0 34%, #050505 34% 100%);
+}
+
+.dashboard-shell {
+  /* Contenedor principal de panel, inventario y usuarios. */
+  width: min(1280px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 20px 0 0;
+}
+
+.section-intro {
+  /* Encabezado de sección con título y acciones alineadas. */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(32, 32, 32, 0.92);
+  padding: 18px 42px 24px;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  font-size: 0.7rem;
+  color: #bbb;
+}
+
+.section-intro h1 {
+  margin: 0;
+  font-size: 2.15rem;
+}
+
+/* Tarjetas de estadisticas y contenido del panel principal */
+.stats-grid {
+  /* Grilla de cuatro indicadores en escritorio. */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(32, 32, 32, 0.92);
+  padding: 10px 42px 20px;
+}
+
+.stat-card {
+  /* Tarjeta oscura para métricas resumidas. */
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 34px;
+  min-height: 72px;
+}
+
+.stat-card span {
+  display: block;
+  color: #767676;
+  margin-bottom: 6px;
+}
+
+.stat-card strong {
+  font-size: 1.1rem;
+}
+
+.text-red {
+  color: var(--red);
+}
+
+.panel-lead {
+  margin: 10px 0 0;
+  max-width: 560px;
+  color: #bdbdbd;
+  font-size: 1rem;
+}
+
+.panel-cta-group {
+  /* Agrupa botones de llamada a la acción dentro del panel. */
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.stats-grid--panel .stat-card {
+  min-height: 110px;
+}
+
+.stat-card small {
+  display: block;
+  margin-top: 10px;
+  color: #8a8a8a;
+  font-size: 0.8rem;
+}
+
+.stat-card--accent {
+  background: linear-gradient(135deg, #090909, #220404);
+  border-color: rgba(255, 27, 18, 0.3);
+}
+
+.panel-grid {
+  /* Distribuye tarjetas informativas del panel en dos columnas. */
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.panel-card {
+  /* Tarjeta base para secciones informativas del dashboard. */
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 28px;
+  min-height: 220px;
+}
+
+.panel-card--hero {
+  /* Variante destacada con fondo radial rojo. */
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255, 27, 18, 0.18),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #111, #1b0909);
+}
+
+.panel-card--notice {
+  background:
+    linear-gradient(180deg, rgba(255, 27, 18, 0.08), transparent 28%), #141414;
+}
+
+.panel-card__header h2 {
+  margin: 4px 0 0;
+  font-size: 1.5rem;
+}
+
+/* Barras visuales para representar niveles de stock */
+.stock-bars {
+  /* Lista vertical de barras de progreso de inventario. */
+  display: grid;
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.stock-row {
+  /* Fila compuesta por etiqueta, barra y porcentaje. */
+  display: grid;
+  grid-template-columns: 120px 1fr 54px;
+  align-items: center;
+  gap: 16px;
+}
+
+.stock-track {
+  /* Riel oscuro que contiene el porcentaje de stock. */
+  height: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stock-fill {
+  /* Relleno interno cuyo ancho se modifica desde JavaScript. */
+  height: 100%;
+  border-radius: 999px;
+}
+
+.stock-fill--green {
+  background: linear-gradient(90deg, #0d6c23, #25be4e);
+}
+
+.stock-fill--yellow {
+  background: linear-gradient(90deg, #6f6202, #c9b300);
+}
+
+.stock-fill--red {
+  background: linear-gradient(90deg, #7f0c0c, #ff3a30);
+}
+
+/* Enlaces rapidos, categorias y alertas del panel general */
+.quick-links {
+  /* Contenedor vertical de accesos rápidos. */
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.quick-link {
+  /* Enlace con aspecto de tarjeta interactiva. */
+  display: block;
+  padding: 16px 18px;
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.quick-link:hover {
+  border-color: rgba(255, 27, 18, 0.55);
+  transform: translateY(-2px);
+}
+
+.quick-link__title {
+  display: block;
+  font-weight: 700;
+}
+
+.quick-link__meta {
+  display: block;
+  margin-top: 6px;
+  color: #9a9a9a;
+  font-size: 0.9rem;
+}
+
+.category-list {
+  /* Lista sin viñetas para resumir productos por categoría. */
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.category-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #0b0b0b;
+  border-left: 3px solid var(--red);
+}
+
+.alert-list {
+  /* Contenedor de mensajes de estado del inventario. */
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.alert-item {
+  /* Fila de alerta con punto de color y texto. */
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: #0b0b0b;
+}
+
+.alert-item p {
+  margin: 0;
+  color: #d0d0d0;
+}
+
+.alert-dot {
+  /* Indicador circular cuyo color representa severidad. */
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex: 0 0 auto;
+}
+
+.alert-dot--green {
+  background: #1cc94c;
+}
+
+.alert-dot--yellow {
+  background: #d0b400;
+}
+
+.alert-dot--red {
+  background: #ff3127;
+}
+
+/* Filtros y tabla principal del inventario */
+.filters {
+  /* Grilla de controles para buscar y filtrar inventario. */
+  display: grid;
+  grid-template-columns: 1fr 280px auto;
+  gap: 18px;
+  background: rgba(32, 32, 32, 0.92);
+  padding: 12px 42px 18px;
+}
+
+.filters input,
+.filters select {
+  /* Variante oscura de campos dentro del área de filtros. */
+  background: rgba(30, 30, 30, 0.85);
+  color: #d6d6d6;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.table-card {
+  /* Contenedor visual de tablas en módulos internos. */
+  background: #141414;
+  margin-top: 18px;
+}
+
+table {
+  /* Tabla a ancho completo sin separación entre celdas. */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  /* Encabezados de tabla con fondo oscuro y texto gris. */
+  text-align: left;
+  padding: 18px 40px;
+  color: #707070;
+  font-size: 1rem;
+  background: #020202;
+}
+
+tbody td {
+  /* Celdas de datos con separador inferior sutil. */
+  padding: 16px 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.97rem;
+}
+
+tbody td:first-child {
+  font-weight: 700;
+}
+
+/* Estado, acciones y paginacion dentro de tablas */
+.pill {
+  /* Etiqueta compacta para estados cuando se usa formato de píldora. */
+  display: inline-block;
+  min-width: 92px;
+  text-align: center;
+  padding: 5px 12px;
+  font-size: 0.67rem;
+}
+
+.pill-green {
+  background: #0a5d1c;
+  color: #51ff72;
+}
+
+.pill-yellow {
+  background: #7a6f00;
+  color: #ffef7b;
+}
+
+.pill-red {
+  background: #9f0909;
+  color: #ff5d5d;
+}
+
+.actions {
+  /* Mantiene los botones de acción en una sola línea en escritorio. */
+  white-space: nowrap;
+}
+
+.actions .mini-btn:last-child {
+  margin-right: 0;
+}
+
+.mini-btn {
+  /* Botón pequeño usado en acciones de tabla y paginación. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border: 1px solid #111;
+  box-shadow: 2px 2px 0 #111;
+  margin-right: 10px;
+  font-size: 0.8rem;
+}
+
+.mini-btn-light {
+  background: #fff;
+  color: #111;
+}
+
+.mini-btn-danger {
+  background: var(--red);
+  color: #fff;
+}
+
+.table-footer {
+  /* Zona inferior de tabla con contador y controles. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 40px 38px;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-footer p {
+  margin: 0;
+  font-size: 0.76rem;
+}
+
+.pagination {
+  /* Agrupa botones de paginación. */
+  display: flex;
+  gap: 10px;
+}
+
+/* Pantallas de creacion y edicion de productos */
+.editor-page {
+  /* Fondo con cuadrícula roja para pantallas de creación y edición. */
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.15),
+      transparent 45%,
+      rgba(255, 0, 0, 0.15) 100%
+    ),
+    linear-gradient(rgba(255, 0, 0, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.18) 1px, transparent 1px), #050505;
+  background-size:
+    auto,
+    23px 23px,
+    23px 23px,
+    auto;
+}
+
+.editor-shell {
+  /* Contenedor ancho de formularios de producto. */
+  width: min(1280px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 26px 0 90px;
+}
+
+.breadcrumb,
+.editor-header-row {
+  /* Alineación horizontal para ruta e identificador del producto. */
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.editor-header-row {
+  justify-content: space-between;
+}
+
+.breadcrumb {
+  /* Cápsula de navegación para volver al inventario. */
+  width: fit-content;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  background: rgba(34, 0, 0, 0.35);
+}
+
+.breadcrumb a {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.product-id {
+  /* Etiqueta visual para mostrar el identificador del producto. */
+  padding: 6px 12px;
+  background: var(--red);
+  color: #000;
+  font-size: 0.8rem;
+}
+
+.editor-layout {
+  /* Formulario e imagen se muestran lado a lado en escritorio. */
+  display: grid;
+  grid-template-columns: 442px 1fr;
+  gap: 56px;
+  align-items: center;
+  min-height: calc(100vh - 250px);
+}
+
+/* Formulario de producto y composicion visual lateral */
+.product-form-card {
+  /* Tarjeta clara que contiene formularios de producto. */
+  background: rgba(247, 247, 247, 0.98);
+  color: var(--text-dark);
+  padding: 28px 26px;
+  box-shadow: var(--shadow);
+}
+
+.editing-banner {
+  /* Aviso superior dentro del formulario de edición. */
+  margin-bottom: 22px;
+  background: var(--red);
+  color: #fff;
+  padding: 10px 14px;
+  border: 2px solid #222;
+}
+
+.split-fields {
+  /* Distribuye dos campos relacionados en la misma fila. */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.form-actions {
+  /* Fila de botones al final de formularios. */
+  display: flex;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+.form-actions--three .btn:first-child {
+  flex: 0.8;
+}
+
+.product-showcase {
+  /* Área decorativa lateral con texto e imagen de producto. */
+  position: relative;
+  min-height: 520px;
+}
+
+.showcase-words {
+  /* Texto gigante HIGH/SPORT detrás de la imagen decorativa. */
+  position: absolute;
+  left: 40px;
+  top: 100px;
+  display: grid;
+  line-height: 0.85;
+  font-size: clamp(5rem, 10vw, 9rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+}
+
+.showcase-words .red {
+  color: var(--red);
+}
+
+.showcase-words .white {
+  color: #f5f5f5;
+}
+
+.shoe {
+  /* Imagen deportiva posicionada sobre el texto de marca. */
+  position: absolute;
+  display: block;
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 26px 24px rgba(0, 0, 0, 0.55));
+}
+
+.shoe--runner {
+  right: 20px;
+  top: -100px;
+  width: 490px;
+  transform: rotate(-10deg);
+}
+
+.product-showcase--stacked .shoe--boot {
+  right: 200px;
+  top: 10px;
+  width: 490px;
+  transform: rotate(1deg);
+}
+
+.showcase-repeat {
+  /* Repetición de marca usada como fondo en edición. */
+  position: absolute;
+  top: 48px;
+  left: 48px;
+  display: grid;
+  line-height: 0.83;
+  font-size: clamp(4.8rem, 8vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.08em;
+}
+
+.showcase-repeat span {
+  color: #fff;
+}
+
+.showcase-repeat span:nth-child(odd) {
+  color: var(--red);
+}
+
+/* Adaptacion para tablets y pantallas medianas */
+@media (max-width: 980px) {
+  /* En tablets se reducen márgenes y varios layouts pasan a una columna. */
+  .topbar,
+  .dashboard-shell,
+  .editor-shell,
+  .auth-shell {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .topbar {
+    /* La navegación se reacomoda para evitar desbordes horizontales. */
+    padding: 16px 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .topnav {
+    width: 100%;
+    order: 3;
+    justify-content: center;
+    gap: 22px;
+  }
+
+  .avatar {
+    order: 2;
+  }
+
+  .stats-grid,
+  .filters,
+  .panel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-intro,
+  .table-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  thead {
+    /* En pantallas medianas la tabla se transforma en tarjetas. */
+    display: none;
+  }
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  tbody tr {
+    background: #0c0c0c;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px 0;
+    margin-bottom: 12px;
+  }
+
+  tbody td {
+    padding: 8px 20px;
+  }
+
+  tbody td::before {
+    /* Muestra etiquetas de columna usando data-label cuando existan. */
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 6px;
+    color: #898989;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .editor-layout {
+    /* Formulario y showcase se apilan verticalmente. */
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .product-showcase {
+    min-height: 340px;
+  }
+
+  .showcase-words,
+  .showcase-repeat {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  .shoe--runner,
+  .product-showcase--stacked .shoe--boot {
+    right: 0;
+    left: auto;
+    transform: scale(0.7);
+    transform-origin: right top;
+  }
+
+  .site-footer--transparent {
+    position: static;
+    padding-bottom: 18px;
+  }
+}
+
+/* Adaptacion para celulares */
+@media (max-width: 640px) {
+  /* En celulares se prioriza ancho completo y botones grandes táctiles. */
+  .auth-shell,
+  .dashboard-shell,
+  .editor-shell {
+    width: calc(100% - 20px);
+  }
+
+  .auth-shell {
+    min-height: auto;
+    padding: 18px 0 28px;
+  }
+
+  .brand-logo {
+    /* Reduce el logo para que no desborde en móviles. */
+    min-width: 0;
+    width: 100%;
+    font-size: 2.15rem;
+    padding: 16px 18px;
+  }
+
+  .auth-card,
+  .auth-card--wide,
+  .product-form-card {
+    width: 100%;
+    padding: 22px 16px;
+  }
+
+  .form-grid,
+  .split-fields,
+  .form-actions,
+  .form-actions--three {
+    /* Todo formulario se vuelve de una sola columna en móvil. */
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .form-actions .btn,
+  .panel-cta-group .btn,
+  .filters .btn {
+    width: 100%;
+  }
+
+  .topnav {
+    /* Permite que los enlaces salten de línea en pantallas estrechas. */
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.92rem;
+  }
+
+  .wordmark {
+    font-size: 1.55rem;
+  }
+
+  .topbar {
+    width: calc(100% - 20px);
+    margin-top: 12px;
+    padding: 14px 12px;
+  }
+
+  .section-intro,
+  .stats-grid,
+  .filters {
+    /* Reduce padding lateral para aprovechar el ancho disponible. */
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .section-intro h1 {
+    font-size: 1.55rem;
+  }
+
+  .stats-grid {
+    gap: 12px;
+  }
+
+  .stat-card,
+  .panel-card {
+    padding: 18px 16px;
+  }
+
+  .panel-card__header h2 {
+    font-size: 1.2rem;
+  }
+
+  .panel-lead {
+    font-size: 0.92rem;
+  }
+
+  .panel-cta-group {
+    width: 100%;
+  }
+
+  .stock-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .stock-row strong {
+    justify-self: flex-start;
+  }
+
+  .quick-link,
+  .category-list li,
+  .alert-item {
+    padding: 14px;
+  }
+
+  .filters {
+    gap: 12px;
+  }
+
+  .table-card {
+    margin-top: 14px;
+  }
+
+  tbody td {
+    padding: 8px 14px;
+  }
+
+  .actions {
+    /* Los botones de acción pueden envolver para no salirse de la pantalla. */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .actions .mini-btn {
+    margin-right: 0;
+  }
+
+  .table-footer {
+    padding: 18px 16px 28px;
+    gap: 12px;
+  }
+
+  .pagination {
+    /* La paginación ocupa todo el ancho en móvil. */
+    width: 100%;
+  }
+
+  .pagination .mini-btn {
+    flex: 1;
+    margin-right: 0;
+  }
+
+  .breadcrumb,
+  .editor-header-row {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb {
+    font-size: 0.82rem;
+    gap: 8px;
+  }
+
+  .product-id {
+    margin-top: 4px;
+  }
+
+  .product-showcase {
+    /* Oculta decoración pesada para simplificar la vista móvil. */
+    min-height: auto;
+    display: none;
+  }
+
+  .brand-chip {
+    position: static;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .auth-card--wide {
+    padding-top: 18px;
+  }
+
+  .site-footer {
+    font-size: 0.66rem;
+    line-height: 1.5;
+    padding: 14px 12px;
+  }
+}

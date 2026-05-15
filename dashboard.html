@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- Página de inventario de productos: muestra estadísticas, búsqueda y tabla de productos -->
+<html lang="es">
+  <head>
+    <!-- Metadatos, fuente, estilos y scripts necesarios para el inventario -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Inventario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/productos.js"></script>
+  </head>
+  <body
+    class="panel-page"
+    onload="
+      protectPage();
+      loadProductosTable();
+    "
+  >
+    <!-- Página de lista de productos: se protege el acceso y se carga la tabla al abrir -->
+    <!-- Barra superior con marca, navegación, avatar y cierre de sesión -->
+    <header class="topbar">
+      <a class="wordmark" href="panel.html"><span>HIGH</span>SPORT</a>
+      <nav class="topnav">
+        <a href="panel.html">Dashboard</a>
+        <a class="active" href="dashboard.html">Inventario</a>
+        <a href="registro-usuario.html">Usuarios</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div class="avatar" title="Kevin Sanchez">KS</div>
+        <button
+          onclick="handleLogout()"
+          style="
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+          "
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-shell">
+      <!-- Encabezado del módulo con acción para crear producto -->
+      <section class="section-intro">
+        <div>
+          <p class="eyebrow">MODULO</p>
+          <h1>Inventario de Productos</h1>
+        </div>
+        <a class="btn btn-outline-red" href="nuevo-producto.html"
+          >+ Nuevo producto</a
+        >
+      </section>
+
+      <!-- Tarjetas de métricas que se actualizan desde productos.js -->
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>TOTAL PRODUCTOS</span>
+          <strong id="stat-total">-</strong>
+        </article>
+        <article class="stat-card">
+          <span>STOCK BAJO</span>
+          <strong class="text-red" id="stat-stock-bajo">-</strong>
+        </article>
+        <article class="stat-card">
+          <span>CATEGORIAS</span>
+          <strong id="stat-categorias">-</strong>
+        </article>
+        <article class="stat-card">
+          <span>VALOR TOTAL</span>
+          <strong id="stat-valor-total">-</strong>
+        </article>
+      </section>
+
+      <!-- Controles de búsqueda y filtro por categoría -->
+      <section class="filters">
+        <input
+          type="text"
+          id="buscar-input"
+          placeholder="Buscar producto..."
+          oninput="filtrarProductos()"
+        />
+        <select id="categoria-select" onchange="filtrarProductos()">
+          <option value="">Todas las categorias</option>
+          <option>Calzado</option>
+          <option>Equipos</option>
+          <option>Ropa</option>
+          <option>Accesorios</option>
+        </select>
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="filtrarProductos()"
+        >
+          Filtrar
+        </button>
+      </section>
+
+      <!-- Tabla donde se renderizan dinámicamente los productos del backend -->
+      <section class="table-card">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Categoría</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                colspan="6"
+                style="text-align: center; padding: 20px; color: #7f7f7f"
+              >
+                Cargando productos...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="table-footer">
+          <!-- Texto actualizado con la cantidad de productos visibles -->
+          <p id="stat-mostrando">Cargando...</p>
+
+          <!-- Botones visuales de paginación, actualmente sin lógica asociada -->
+          <div class="pagination">
+            <button class="mini-btn mini-btn-light" type="button">Atras</button>
+            <button class="mini-btn mini-btn-danger" type="button">
+              Siguiente
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Pie de página de páginas internas -->
+    <footer class="site-footer site-footer--solid">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Politica de privacidad</a> |
+      <a href="#">Terminos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+  </body>
+</html>

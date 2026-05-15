@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- Página de inicio de sesión de HighSport: contiene el formulario de autenticación y el enlace al registro -->
+<html lang="es">
+  <head>
+    <!-- Metadatos básicos para idioma, caracteres y adaptación a móviles -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Iniciar sesión</title>
+
+    <!-- Carga de fuente externa usada por toda la interfaz -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icono, estilos globales y scripts compartidos de API/autenticación -->
+    <link rel="icon" href="img/icon.png" type="image/png" sizes="64x64" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+  </head>
+  <body class="auth-page">
+    <!-- El formulario de login envía email y contraseña a la función handleLogin -->
+    <main class="auth-shell">
+      <!-- Bloque visual de marca que identifica el sistema -->
+      <section class="brand-lockup brand-lockup--login">
+        <div class="brand-logo brand-logo--shadow"><span>HIGH</span>SPORT</div>
+        <p class="brand-subtitle">Sistema de inventario deportivo</p>
+      </section>
+
+      <!-- Tarjeta principal con campos de acceso -->
+      <section class="auth-card">
+        <h1>Iniciar sesión</h1>
+        <form class="form-stack" id="login-form">
+          <label for="usuario">USUARIO</label>
+          <input
+            id="usuario"
+            type="email"
+            placeholder="tu@correo.com"
+            required
+          />
+
+          <label for="contrasena">CONTRASEÑA</label>
+          <input
+            id="contrasena"
+            type="password"
+            placeholder="•••••••••••"
+            required
+          />
+
+          <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+        </form>
+        <p class="auth-link">
+          ¿No tienes cuenta aún? <a href="crear-cuenta.html">Regístrate</a>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      // Intercepta el envío para usar JavaScript en lugar de recargar la página.
+      document.getElementById("login-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Obtiene los valores escritos por el usuario.
+        const email = document.getElementById("usuario").value;
+        const password = document.getElementById("contrasena").value;
+
+        // Envía las credenciales al flujo de autenticación definido en auth.js.
+        handleLogin(email, password);
+      });
+    </script>
+
+    <!-- Pie de página con enlaces informativos -->
+    <footer class="site-footer site-footer--transparent">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Política de privacidad</a> |
+      <a href="#">Términos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+  </body>
+</html>

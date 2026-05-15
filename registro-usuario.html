@@ -1,0 +1,377 @@
+<!doctype html>
+<!-- Página de administración de usuarios: muestra la lista de usuarios y permite crear, editar o eliminar -->
+<html lang="es">
+  <head>
+    <!-- Configuración de documento, fuente, estilos y lógica compartida -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Usuarios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+  </head>
+  <body
+    class="panel-page"
+    onload="
+      protectPage();
+      cargarUsuarios();
+    "
+  >
+    <!-- Barra superior para navegar entre módulos privados -->
+    <header class="topbar">
+      <a class="wordmark" href="panel.html"><span>HIGH</span>SPORT</a>
+      <nav class="topnav">
+        <a href="panel.html">Dashboard</a>
+        <a href="dashboard.html">Inventario</a>
+        <a class="active" href="registro-usuario.html">Usuarios</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div class="avatar" title="Kevin Sanchez">KS</div>
+        <button
+          onclick="handleLogout()"
+          style="
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+          "
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-shell">
+      <!-- Encabezado del módulo de usuarios con botón para abrir el modal -->
+      <section class="section-intro">
+        <div>
+          <p class="eyebrow">MODULO</p>
+          <h1>Gestión de Usuarios</h1>
+        </div>
+        <button class="btn btn-primary" onclick="abrirModalCrear()">
+          + Nuevo usuario
+        </button>
+      </section>
+
+      <!-- Tabla donde se listan los usuarios recibidos desde el backend -->
+      <section class="table-card">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usuarios-tbody">
+            <tr>
+              <td
+                colspan="4"
+                style="text-align: center; padding: 20px; color: #7f7f7f"
+              >
+                <!-- Aquí se reemplaza el mensaje por la lista de usuarios cargados desde la API -->
+                Cargando usuarios...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <p id="usuarios-contador">-</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal crear/editar usuario -->
+    <div
+      id="modal-usuario"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <!-- Caja central del modal con el formulario de usuario -->
+      <div
+        style="
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 8px;
+          padding: 32px;
+          width: 100%;
+          max-width: 480px;
+          margin: 20px;
+        "
+      >
+        <h2 id="modal-titulo" style="margin-bottom: 24px; font-size: 1.2rem">
+          Nuevo usuario
+        </h2>
+
+        <!-- Campo oculto: vacío al crear y con id al editar -->
+        <input type="hidden" id="modal-id" />
+
+        <!-- Campo de nombre del usuario -->
+        <label
+          style="
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+          "
+          >NOMBRE</label
+        >
+        <input
+          id="modal-nombre"
+          type="text"
+          placeholder="Nombre completo"
+          style="
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+          "
+        />
+
+        <!-- Campo de correo electrónico del usuario -->
+        <label
+          style="
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+          "
+          >EMAIL</label
+        >
+        <input
+          id="modal-email"
+          type="email"
+          placeholder="correo@ejemplo.com"
+          style="
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+          "
+        />
+
+        <!-- Campo de contraseña; requerido tanto al crear como al editar en este flujo -->
+        <label
+          style="
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+          "
+          >CONTRASEÑA</label
+        >
+        <input
+          id="modal-password"
+          type="password"
+          placeholder="Mínimo 6 caracteres"
+          style="
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+          "
+        />
+
+        <!-- Selector de rol para definir permisos del usuario -->
+        <label
+          style="
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+          "
+          >ROL</label
+        >
+        <select
+          id="modal-rol"
+          style="
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 24px;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+          "
+        >
+          <option value="ADMIN">ADMIN</option>
+          <option value="USUARIO">USUARIO</option>
+        </select>
+
+        <!-- Botones del modal: cerrar sin guardar o confirmar cambios -->
+        <div style="display: flex; gap: 12px; justify-content: flex-end">
+          <button class="btn btn-secondary" onclick="cerrarModal()">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" onclick="guardarUsuario()">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie de página interno -->
+    <footer class="site-footer site-footer--solid">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Política de privacidad</a> |
+      <a href="#">Términos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+
+    <script>
+      // Función que carga la lista de usuarios desde el backend y actualiza la tabla
+      async function cargarUsuarios() {
+        try {
+          // Consulta todos los usuarios registrados en el backend.
+          const usuarios = await apiCall("/usuarios", "GET");
+
+          // Referencias al cuerpo de la tabla y al contador inferior.
+          const tbody = document.getElementById("usuarios-tbody");
+          const contador = document.getElementById("usuarios-contador");
+
+          // Limpia el estado de carga antes de insertar resultados reales.
+          tbody.innerHTML = "";
+
+          if (usuarios.length === 0) {
+            // Mensaje cuando todavía no hay usuarios registrados.
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px; color:#7f7f7f;">No hay usuarios registrados</td></tr>`;
+            contador.textContent = "0 usuarios";
+            return;
+          }
+
+          usuarios.forEach((u) => {
+            // Crea una fila con datos del usuario y botones de edición/eliminación.
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${u.nombre}</td>
+              <td>${u.email}</td>
+              <td><span style="background:#222; padding:4px 10px; border-radius:4px; font-size:0.75rem; letter-spacing:1px;">${u.rol}</span></td>
+              <td class="actions">
+                <button onclick="abrirModalEditar(${u.id}, '${u.nombre}', '${u.email}', '${u.rol}')" class="icon-btn" title="Editar">✎</button>
+                <button onclick="eliminarUsuario(${u.id})" class="icon-btn icon-btn--danger" title="Eliminar">✕</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          // Actualiza el contador con pluralización básica.
+          contador.textContent = `${usuarios.length} usuario${usuarios.length !== 1 ? "s" : ""} registrado${usuarios.length !== 1 ? "s" : ""}`;
+        } catch (error) {
+          console.error("Error cargando usuarios:", error);
+        }
+      }
+
+      function abrirModalCrear() {
+        // Prepara el modal en modo creación dejando campos vacíos.
+        document.getElementById("modal-titulo").textContent = "Nuevo usuario";
+        document.getElementById("modal-id").value = "";
+        document.getElementById("modal-nombre").value = "";
+        document.getElementById("modal-email").value = "";
+        document.getElementById("modal-password").value = "";
+        document.getElementById("modal-rol").value = "USUARIO";
+        document.getElementById("modal-usuario").style.display = "flex";
+      }
+
+      function abrirModalEditar(id, nombre, email, rol) {
+        // Prepara el modal en modo edición cargando datos existentes.
+        document.getElementById("modal-titulo").textContent = "Editar usuario";
+        document.getElementById("modal-id").value = id;
+        document.getElementById("modal-nombre").value = nombre;
+        document.getElementById("modal-email").value = email;
+        document.getElementById("modal-password").value = "";
+        document.getElementById("modal-rol").value = rol;
+        document.getElementById("modal-usuario").style.display = "flex";
+      }
+
+      function cerrarModal() {
+        // Oculta el modal sin modificar los datos de la tabla.
+        document.getElementById("modal-usuario").style.display = "none";
+      }
+
+      async function guardarUsuario() {
+        // Lee los valores actuales del modal.
+        const id = document.getElementById("modal-id").value;
+        const nombre = document.getElementById("modal-nombre").value;
+        const email = document.getElementById("modal-email").value;
+        const password = document.getElementById("modal-password").value;
+        const rol = document.getElementById("modal-rol").value;
+
+        // Valida que no existan campos vacíos antes de llamar al backend.
+        if (!nombre || !email || !password || !rol) {
+          showAlert("Todos los campos son obligatorios", "error");
+          return;
+        }
+
+        try {
+          if (id) {
+            // Si hay id, actualiza el usuario existente.
+            await apiCall(`/usuarios/${id}`, "PUT", {
+              nombre,
+              email,
+              password,
+              rol,
+            });
+            showAlert("Usuario actualizado correctamente", "success");
+          } else {
+            // Si no hay id, crea un usuario nuevo.
+            await apiCall("/usuarios", "POST", {
+              nombre,
+              email,
+              password,
+              rol,
+            });
+            showAlert("Usuario creado correctamente", "success");
+          }
+
+          // Cierra el modal y refresca la tabla para mostrar el cambio.
+          cerrarModal();
+          cargarUsuarios();
+        } catch (error) {
+          showAlert("Error: " + error.message, "error");
+        }
+      }
+
+      async function eliminarUsuario(id) {
+        // Solicita confirmación para evitar eliminaciones accidentales.
+        if (!confirm("¿Estás seguro de que deseas eliminar este usuario?"))
+          return;
+        try {
+          // Elimina el usuario y vuelve a cargar la lista actualizada.
+          await apiCall(`/usuarios/${id}`, "DELETE");
+          showAlert("Usuario eliminado correctamente", "success");
+          cargarUsuarios();
+        } catch (error) {
+          showAlert("Error al eliminar: " + error.message, "error");
+        }
+      }
+    </script>
+  </body>
+</html>

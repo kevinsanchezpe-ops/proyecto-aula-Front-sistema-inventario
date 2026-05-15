@@ -1,0 +1,347 @@
+<!doctype html>
+<!-- Panel general de HighSport: resumen operativo del almacén y acceso rápido a secciones -->
+<html lang="es">
+  <head>
+    <!-- Configuración general del documento, fuente, estilos y scripts del panel -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HighSport | Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="proyecto aula\img\icon.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/productos.js"></script>
+  </head>
+
+  <body
+    class="panel-page"
+    onload="
+      protectPage();
+      cargarEstadisticasPanel();
+    "
+  >
+    <!-- Navegación global visible en páginas privadas -->
+    <header class="topbar">
+      <a class="wordmark" href="panel.html"><span>HIGH</span>SPORT</a>
+      <nav class="topnav">
+        <a class="active" href="panel.html">Dashboard</a>
+        <a href="dashboard.html">Inventario</a>
+        <a href="registro-usuario.html">Usuarios</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div class="avatar" title="Kevin Sanchez">KS</div>
+        <button
+          onclick="handleLogout()"
+          style="
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+          "
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-shell">
+      <!-- Introducción del panel con accesos principales -->
+      <section class="section-intro section-intro--panel">
+        <div>
+          <p class="eyebrow">PANEL GENERAL</p>
+          <h1>Resumen operativo del almacén</h1>
+          <p class="panel-lead">
+            Control visual del inventario, usuarios y movimientos principales de
+            HighSport.
+          </p>
+        </div>
+        <div class="panel-cta-group">
+          <a class="btn btn-primary" href="nuevo-producto.html"
+            >Registrar producto</a
+          >
+          <a class="btn btn-outline-red" href="dashboard.html"
+            >Ver inventario</a
+          >
+        </div>
+      </section>
+
+      <!-- Resumen numérico alimentado con datos del backend -->
+      <section class="stats-grid stats-grid--panel">
+        <article class="stat-card stat-card--accent">
+          <span>PRODUCTOS REGISTRADOS</span>
+          <strong id="panel-total">-</strong>
+          <small>Inventario actualizado hoy</small>
+        </article>
+        <article class="stat-card">
+          <span>STOCK BAJO</span>
+          <strong class="text-red" id="panel-stock-bajo">-</strong>
+          <small>Productos que requieren reposición</small>
+        </article>
+        <article class="stat-card">
+          <span>USUARIOS ACTIVOS</span>
+          <strong id="panel-usuarios">-</strong>
+          <small>Administradores y auxiliares</small>
+        </article>
+        <article class="stat-card">
+          <span>VALOR TOTAL</span>
+          <strong id="panel-valor-total">-</strong>
+          <small>Valor estimado del almacén</small>
+        </article>
+      </section>
+
+      <!-- Cuadrícula inferior con estado, enlaces, categorías y alertas -->
+      <section class="panel-grid">
+        <!-- Tarjeta con barras porcentuales del estado del stock -->
+        <article class="panel-card panel-card--hero">
+          <div class="panel-card__header">
+            <p class="eyebrow">MOVIMIENTO</p>
+            <h2>Estado del inventario</h2>
+          </div>
+          <div class="stock-bars">
+            <div class="stock-row">
+              <span>Disponible</span>
+              <div class="stock-track">
+                <div
+                  class="stock-fill stock-fill--green"
+                  style="width: 82%"
+                ></div>
+              </div>
+              <strong>82%</strong>
+            </div>
+            <div class="stock-row">
+              <span>Stock bajo</span>
+              <div class="stock-track">
+                <div
+                  class="stock-fill stock-fill--yellow"
+                  style="width: 14%"
+                ></div>
+              </div>
+              <strong>14%</strong>
+            </div>
+            <div class="stock-row">
+              <span>Agotado</span>
+              <div class="stock-track">
+                <div class="stock-fill stock-fill--red" style="width: 4%"></div>
+              </div>
+              <strong>4%</strong>
+            </div>
+          </div>
+        </article>
+
+        <!-- Tarjeta de accesos rápidos a procesos frecuentes -->
+        <article class="panel-card">
+          <div class="panel-card__header">
+            <p class="eyebrow">ACCESO RÁPIDO</p>
+            <h2>Gestión de procesos</h2>
+          </div>
+          <div class="quick-links">
+            <a class="quick-link" href="dashboard.html">
+              <span class="quick-link__title">Consultar inventario</span>
+              <span class="quick-link__meta"
+                >Ver productos, filtros y estados</span
+              >
+            </a>
+            <a class="quick-link" href="nuevo-producto.html">
+              <span class="quick-link__title">Registrar producto</span>
+              <span class="quick-link__meta"
+                >Agregar un nuevo artículo al sistema</span
+              >
+            </a>
+            <a class="quick-link" href="editar-producto.html">
+              <span class="quick-link__title">Editar producto</span>
+              <span class="quick-link__meta"
+                >Actualizar precio, cantidad y categoría</span
+              >
+            </a>
+            <a class="quick-link" href="registro-usuario.html">
+              <span class="quick-link__title">Gestión de usuario</span>
+              <span class="quick-link__meta"
+                >Crear perfiles para administrar el sistema</span
+              >
+            </a>
+          </div>
+        </article>
+
+        <!-- Lista de categorías; se reemplaza dinámicamente en el script -->
+        <article class="panel-card">
+          <div class="panel-card__header">
+            <p class="eyebrow">CATEGORÍAS</p>
+            <h2>Distribución actual</h2>
+          </div>
+          <ul class="category-list">
+            <li><span>Calzado</span><strong>42</strong></li>
+            <li><span>Ropa</span><strong>38</strong></li>
+            <li><span>Equipos</span><strong>27</strong></li>
+            <li><span>Accesorios</span><strong>25</strong></li>
+            <li><span>Suplementos</span><strong>10</strong></li>
+            <li><span>Otros</span><strong>6</strong></li>
+          </ul>
+        </article>
+
+        <!-- Lista de alertas operativas; se reemplaza dinámicamente en el script -->
+        <article class="panel-card panel-card--notice">
+          <div class="panel-card__header">
+            <p class="eyebrow">ALERTAS</p>
+            <h2>Atención del día</h2>
+          </div>
+          <div class="alert-list">
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--yellow"></span>
+              <p>8 productos están cerca de agotarse y necesitan revisión.</p>
+            </div>
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--red"></span>
+              <p>La camiseta Under Armor está agotada actualmente.</p>
+            </div>
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--green"></span>
+              <p>El inventario fue consultado correctamente por el equipo.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Pie de página de páginas internas -->
+    <footer class="site-footer site-footer--solid">
+      © 2026 High Sport. Todos los derechos reservados. |
+      <a href="#">Política de privacidad</a> |
+      <a href="#">Términos y condiciones</a> | <a href="#">Soporte</a> |
+      Contacto: soporte@highsport.com
+    </footer>
+  </body>
+
+  <script>
+    // Función principal del panel que carga estadísticas de inventario y usuarios
+    async function cargarEstadisticasPanel() {
+      try {
+        // Solicita productos y usuarios para calcular los indicadores del panel.
+        const productos = await fetchProductos();
+        const usuarios = await apiCall("/usuarios", "GET");
+
+        // Calcula totales, estados de stock y valor económico del inventario.
+        const total = productos.length;
+        const stockBajo = productos.filter(
+          (p) => p.stock > 0 && p.stock <= 20,
+        ).length;
+        const agotados = productos.filter((p) => p.stock === 0).length;
+        const disponibles = productos.filter((p) => p.stock > 20).length;
+        const valorTotal = productos.reduce(
+          (acc, p) => acc + p.precio * p.stock,
+          0,
+        );
+        const totalUsuarios = usuarios.length;
+
+        // Estadísticas principales
+        document.getElementById("panel-total").textContent = total;
+        document.getElementById("panel-stock-bajo").textContent = stockBajo;
+        document.getElementById("panel-usuarios").textContent = totalUsuarios;
+        document.getElementById("panel-valor-total").textContent =
+          "$" + valorTotal.toLocaleString("es-CO");
+
+        // Barras de estado
+        if (total > 0) {
+          // Convierte cantidades absolutas en porcentajes para las barras visuales.
+          const pctDisponible = Math.round((disponibles / total) * 100);
+          const pctStockBajo = Math.round((stockBajo / total) * 100);
+          const pctAgotado = Math.round((agotados / total) * 100);
+
+          document.querySelector(".stock-fill--green").style.width =
+            pctDisponible + "%";
+          document.querySelector(".stock-fill--yellow").style.width =
+            pctStockBajo + "%";
+          document.querySelector(".stock-fill--red").style.width =
+            pctAgotado + "%";
+
+          document.querySelectorAll(".stock-row strong")[0].textContent =
+            pctDisponible + "%";
+          document.querySelectorAll(".stock-row strong")[1].textContent =
+            pctStockBajo + "%";
+          document.querySelectorAll(".stock-row strong")[2].textContent =
+            pctAgotado + "%";
+        }
+
+        // Distribución por categoría
+        const categorias = {};
+        productos.forEach((p) => {
+          // Acumula cuántos productos pertenecen a cada categoría.
+          categorias[p.categoria] = (categorias[p.categoria] || 0) + 1;
+        });
+
+        const categoryList = document.querySelector(".category-list");
+        if (categoryList) {
+          categoryList.innerHTML = "";
+          if (Object.keys(categorias).length === 0) {
+            categoryList.innerHTML =
+              "<li><span>Sin productos</span><strong>0</strong></li>";
+          } else {
+            // Ordena de mayor a menor cantidad antes de pintar la lista.
+            Object.entries(categorias)
+              .sort((a, b) => b[1] - a[1])
+              .forEach(([cat, cantidad]) => {
+                const li = document.createElement("li");
+                li.innerHTML = `<span>${cat}</span><strong>${cantidad}</strong>`;
+                categoryList.appendChild(li);
+              });
+          }
+        }
+
+        // Alertas dinámicas
+        const alertList = document.querySelector(".alert-list");
+        if (alertList) {
+          alertList.innerHTML = "";
+
+          if (stockBajo > 0) {
+            // Agrega alerta amarilla cuando existen productos próximos a agotarse.
+            alertList.innerHTML += `
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--yellow"></span>
+              <p>${stockBajo} producto${stockBajo !== 1 ? "s están" : " está"} cerca de agotarse y necesitan revisión.</p>
+            </div>`;
+          }
+
+          const productosAgotados = productos.filter((p) => p.stock === 0);
+          productosAgotados.forEach((p) => {
+            // Agrega una alerta roja por cada producto sin stock.
+            alertList.innerHTML += `
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--red"></span>
+              <p>${p.nombre} está agotado actualmente.</p>
+            </div>`;
+          });
+
+          if (stockBajo === 0 && agotados === 0) {
+            // Mensaje positivo cuando no hay riesgos de inventario.
+            alertList.innerHTML += `
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--green"></span>
+              <p>Todo el inventario está en buen estado.</p>
+            </div>`;
+          } else {
+            // Mensaje de cierre indicando que la consulta se realizó correctamente.
+            alertList.innerHTML += `
+            <div class="alert-item">
+              <span class="alert-dot alert-dot--green"></span>
+              <p>El inventario fue consultado correctamente.</p>
+            </div>`;
+          }
+        }
+      } catch (error) {
+        console.error("Error cargando estadísticas:", error);
+      }
+    }
+
+    // Ejecuta la carga también al final del documento por seguridad.
+    cargarEstadisticasPanel();
+  </script>
+</html>
